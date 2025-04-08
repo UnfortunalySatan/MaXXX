@@ -157,6 +157,8 @@ public class PlayerController : MonoBehaviour
             animator.transform.localScale = new Vector3(1, 1);
         }
 
+
+        YouDead();
     }
 
     private void FixedUpdate()
@@ -182,6 +184,14 @@ public class PlayerController : MonoBehaviour
         {
             OnDisable();
             gameOver.SetActive(true);
+        }
+    }
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Enemy")
+        {
+            //Debug.Log("было");
+            isDamaged = true;
         }
     }
     private void OnCollisionExit2D(Collision2D collision)
@@ -244,5 +254,14 @@ public class PlayerController : MonoBehaviour
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #endif
+    }
+
+    void YouDead()
+    {
+        if (currentHP <= 0)
+        {
+            OnDisable();
+            gameOver.SetActive(true);
+        }
     }
 }

@@ -22,6 +22,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private InputActionReference Jump;
     [SerializeField] private InputActionReference Dodge;
     [SerializeField] private InputActionReference Attack;
+    [SerializeField] private InputActionReference Sprint;
 
     public Slider slider;
     public Animator animator;
@@ -33,6 +34,7 @@ public class PlayerController : MonoBehaviour
     bool isOnFloor;
 
     bool isInvincible;
+    bool isRunning;
     public bool isDamaged;
     float timerTime;
     float timerDodge;
@@ -57,6 +59,7 @@ public class PlayerController : MonoBehaviour
         Jump.action.Enable();
         Dodge.action.Enable();
         Attack.action.Enable();
+        Sprint.action.Enable();
     }
     private void OnDisable()
     {
@@ -64,6 +67,7 @@ public class PlayerController : MonoBehaviour
         Jump.action.Disable();
         Dodge.action.Disable();
         Attack.action.Disable();
+        Sprint.action.Disable();
     }
 
     private void Start()
@@ -96,10 +100,15 @@ public class PlayerController : MonoBehaviour
             timerTime = dodgeTime;
             animator.SetBool("isDodging", true);
         }
+        if (Sprint.action.IsPressed())
+        {
+            isRunning = true;
+        }
+        else { isRunning = false; }
         //¿“¿ ¿
         if (Attack.action.IsPressed()) //”—“¿À, ƒŒƒ≈À¿“‹!
         {
-            animator.SetBool("isFight", true);          
+            animator.SetBool("isFight", true);
             Attack.action.Disable();
             isFight = true;
             if (timeBtwAttack <= 0)
@@ -163,8 +172,15 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        positionwalk = walk * walkSpeed * Time.deltaTime;
-        transform.position = transform.position + new Vector3(positionwalk, 0);
+        if (isRunning)
+        {
+            positionwalk = walk * walkSpeed * runMultiplier * Time.deltaTime;
+        }
+        else
+        {
+            positionwalk = walk * walkSpeed * Time.deltaTime;
+        }
+            rb.position = rb.position + new Vector2(positionwalk, 0);
 
     }
 
